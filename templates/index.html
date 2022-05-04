@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <form>
+        <input type="text" class="form-control" id="inputArrondissement2" placeholder="Recherche par arrondissement" size="25">
+        <small id="textHelp" class="text-danger"></small>
+        </br>
+        <button type="button" class="btn btn-primary" id="button-rechercher" onclick="return recherche_par_arrondissement();">Rechercher</button>
+        <hr>
+        <select class="form-control" id="select" onchange="return recherche_par_installation();">
+            <option value="" disabled selected>Recherche par nom d'installation</option>
+            {% for installation in installations %}
+                <option value="{{ installation }}">{{ installation }}</option>
+            {% endfor %}
+        </select>
+        </br>
+        <p class="text-center p-3 mb-2 bg-primary text-white" id="info"></p>
+    </form>
+
+    <div class="table-responsive" name="input-container" id="rechercher-resultat" style="visibility:hidden;">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">installation</th>
+                </tr>
+            </thead>
+            <tbody id="installation-tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <div id="select-container">
+        <div class="table-responsive" id="piscine" style="visibility:hidden;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">id_uev</th>
+                    <th scope="col">type</th>
+                    <th scope="col">nom</th>
+                    <th scope="col">arrondissement</th>
+                    <th scope="col">adresse</th>
+                    <th scope="col">propriete</th>
+                    <th scope="col">gestion</th>
+                    <th scope="col">point_x</th>
+                    <th scope="col">point_y</th>
+                    <th scope="col">equipement</th>
+                    <th scope="col">long</th>
+                    <th scope="col">lat</th>
+                    </tr>
+                </thead>
+                <tbody id="piscine-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive" id="patinoire" style="visibility:hidden;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">patinoire</th>
+                    <th scope="col">arrondissement</th>
+                    <th scope="col" nowrap="nowrap">
+                        <p style="margin: 0; display: inline-block;">conditions</p>
+                    </th>
+                    </tr>
+                </thead>
+                <tbody id="patinoire-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive" id="glissade" style="visibility:hidden;">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">glissade</th>
+                    <th scope="col">arrondissement</th>
+                    <th scope="col">cle</th>
+                    <th scope="col">date_maj</th>
+                    <th scope="col">ouvert</th>
+                    <th scope="col">deblaye</th>
+                    <th scope="col">condition</th>
+                    </tr>
+                </thead>
+                <tbody id="glissade-tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}

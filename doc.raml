@@ -1,0 +1,211 @@
+#%RAML 1.0
+title: Projet de session INF5190
+mediaType: application/json
+
+/api:
+    /installations:
+        get:
+            description: Retourner la liste de toutes les informations de toutes les installations disponibles.
+            queryParameters:
+                arrondissement:
+                    displayName: arrondissement
+                    type: string
+                    description: Retourner la liste de toutes les informations de toutes les installations selon le nom de l'arrondissement.
+                    example: "/api/installations?arrondissement=LaSalle"
+                    required: false
+                installation:
+                    displayName: installation
+                    type: string
+                    description: Retourner la liste de toutes les informations de toutes les installations selon le nom de l'installation.
+                    example: "/api/installations?installation=Parc+De+Gaspé"
+                    required: false
+            responses:
+                200:
+                    body:
+                        application/json:
+                            type: Installation[]
+                            example: |
+                                [
+                                  {
+                                    "id": 119,
+                                    "nom": "St-Roch",
+                                    "type": "piscine",
+                                    "arrondissement": "Villeray-Saint-Michel-Parc-Extension",
+                                    "id_uev": 5126259,
+                                    "type_piscine": "Piscine intérieure",
+                                    "adresse": "400, Avenue Ball",
+                                    "propriete": "Municipale",
+                                    "gestion": "Privé",
+                                    "point_x": "294567,6056",
+                                    "point_y": "5043571606",
+                                    "equipement": "Piscine récréative",
+                                    "long": -73.631014,
+                                    "lat": 45.53198
+                                  },
+                                  {
+                                    "id": 411,
+                                    "nom": "Patinoire avec bandes, Parc Alexander (PSE)",
+                                    "type": "patinoire",
+                                    "arrondissement": "Pierrefonds - Roxboro",
+                                    "conditions":
+                                    [
+                                      {
+                                          "date_heure": "2013-01-17 13:50:37",
+                                          "ouvert": "0",
+                                          "deblaye": "0",
+                                          "arrose": "1",
+                                          "resurface": "0"
+                                      },
+                                      {
+                                          "date_heure": "2013-01-18 10:01:05",
+                                          "ouvert": "None",
+                                          "deblaye": "1",
+                                          "arrose": "1",
+                                          "resurface": "0"
+                                      },
+                                      {
+                                          "date_heure": "2013-01-22 15:16:59",
+                                          "ouvert": "1",
+                                          "deblaye": "0",
+                                          "arrose": "1",
+                                          "resurface": "0"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": 590,
+                                    "nom": "Aire de glissade, Parc Henri-Bourassa",
+                                    "type": "glissade",
+                                    "arrondissement": "Montréal-Nord",
+                                    "cle": "mno",
+                                    "date_maj": "2022-03-16 05:30:58",
+                                    "ouvert": "",
+                                    "deblaye": "0",
+                                    "condition": "N/A"
+                                  }
+                                ]
+                404:
+                    description: Aucune installation trouvée
+
+    /installation:
+        /xml:
+            get:
+                description: Retourner la liste de toutes les informations de toutes les installations disponibles en format xml.
+                exemple: "/api/installations/xml"
+                queryParameters:
+                installation:
+                    displayName: installation
+                    type: string
+                    description: Retourner la liste de toutes les informations de toutes les installations selon le nom de l'installation en format xml.
+                    example: "/api/installations/xml?installation=Parc+De+Gaspé"
+                    required: false
+                responses:
+                    200:
+                        body:
+                            text/xml:
+                                example: |
+                                    <?xml version="1.0" encoding="UTF-8" ?>
+                                    <root>
+                                        <id type="int">163</id>
+                                        <nom type="str">Parc De Gaspé</nom>
+                                        <type type="str">piscine</type>
+                                        <arrondissement type="str">Rosemont-La Petite-Patrie</arrondissement>
+                                        <id_uev type="int">3080482</id_uev>
+                                        <type_piscine type="str">Pataugeoire</type_piscine>
+                                        <adresse type="str">6 655, Avenue De Gaspé</adresse>
+                                        <propriete type="str">Municipale</propriete>
+                                        <gestion type="str">Municipale</gestion>
+                                        <point_x type="str">296282,86</point_x>
+                                        <point_y type="str">5043707,21</point_y>
+                                        <equipement type="str">NaN</equipement>
+                                        <long type="float">-73.609059</long>
+                                        <lat type="float">45.533227</lat>
+                                    </root>
+                    404:
+                        description: Aucune installation trouvée
+
+
+    /installation:
+        /csv:
+            get:
+                description: Retourner la liste de toutes les informations de toutes les installations disponibles en format csv.
+                exemple: "/api/installations/csv"
+                queryParameters:
+                    installation:
+                        displayName: installation
+                        type: string
+                        description: Retourner la liste de toutes les informations de toutes les installations selon le nom de l'installation en format csv.
+                        example: "/api/installations/csv?installation=Aire+de+glissade,+Le+Ber"
+                        required: false
+                responses:
+                    200:
+                        body:
+                            text/csv:
+                                example: |
+                                    id,nom,type,arrondissement,date_maj,ouvert,deblaye,condition
+                                    604,"Aire de glissade, Le Ber",glissade,Le Sud-Ouest,2022-03-12 03-14-27,0,0,NaN
+                    404:
+                        description: Aucune installation trouvée
+
+    /installation:
+        /modifier:
+            put:
+                description: Modifier l'état d'une installation. L'id, le nom, le type et le nom d'arrondissement ne sont pas modifiables.
+                exemple: "/api/installations/modifier"
+                queryParameters:
+                    installation:
+                        displayName: installation
+                        type: string
+                        description: Modifier une installation selon son nom.
+                        example: "/api/installations/modifier?installation=Aire+de+glissade,+Le+Ber"
+                        required: true
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "cle": "sou",
+                                "date_maj": "2022-03-12 03:14:27",
+                                "ouvert": "1",
+                                "deblaye": "1",
+                                "condition": "Excellente"
+                            }
+                responses:
+                    201:
+                        description: Retourner les info sur l'installation modifiée
+                        body:
+                            application/json:
+                            example: |
+                                {
+                                    "id": 604,
+                                    "nom": "Aire de glissade, Le Ber",
+                                    "type": "glissade",
+                                    "arrondissement": "Le Sud-Ouest",
+                                    "date_maj": "2022-03-12 03:14:27",
+                                    "ouvert": "1",
+                                    "deblaye": "1",
+                                    "condition": "Excellente"
+                                }
+                    404:
+                        description: Aucune installation trouvée
+
+    /installation:
+        /supprimer:
+            delete:
+                description: Supprimer une installation.
+                exemple: "/api/installations/supprimer"
+                queryParameters:
+                    installation:
+                        displayName: installation
+                        type: string
+                        description: Supprimer une installation selon son nom.
+                        example: "/api/installations/supprimer?installation=Aire+de+glissade,+Le+Ber"
+                        required: true
+                responses:
+                    200:
+                        description: L'installation a été supprimée.
+                        body:
+                            text/plain:
+                            example: |
+                                Succès
+                    404:
+                        description: Aucune installation trouvée.
