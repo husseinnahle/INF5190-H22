@@ -46,6 +46,16 @@ def search_by_installation(installation):
     installations = db.read_installation_nom(installation)
     return installations.to_dictionary()
 
+def search_by_arrondissement(arrondissement):
+    db = get_db()
+    installations = db.read_all_installations_arrondissement(arrondissement)
+    return [installation.to_dictionary() for installation in installations]
+
+
+def search_by_installation(installation):
+    db = get_db()
+    installations = db.read_installation_nom(installation)
+    r
 
 @app.teardown_appcontext
 def close_connection(exception):
