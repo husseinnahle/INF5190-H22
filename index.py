@@ -12,9 +12,9 @@ from unicodedata import normalize
 from unicodedata import category
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from .modules.database import Database
-from .modules.parser import parse
-from .modules.schemas import validate_schema
+from .src.modules.database import Database
+from .src.modules.parser import parse
+from .src.modules.schemas import validate_schema
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
