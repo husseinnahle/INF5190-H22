@@ -2,51 +2,34 @@ resource_types:
 - name: pull-request
   type: registry-image
   source:
-    repository: teliaoss/github-pr-resource
+    repository: aoldershaw/github-pr-resource
 
 resources:
-- name: pull-request
+- name: pull-requests
   type: pull-request
   check_every: 24h
-  webhook_token: token
+  webhook_token: ((pr-webhook-token))
   source:
     repository: husseinnahle/INF5190-H22
     access_token: ((github-access-token))
 
+- name: repo
+  type: git
+  source:
+    uri: https://github.com/husseinnahle/INF5190-H22
+    branch: ci_pipeline
 
 jobs:
 - name: test
   plan:
-  - get: pull-request
+  - get: repo
+  - get: pull-requests
     trigger: true
-    version: every
-  - put: pull-request
-    params:
-      path: pull-request
-      status: pending
-  - task: unit-test
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: busybox
-      inputs:
-        - name: pull-request
-      run:
-        path: /bin/sh
-        args:
-          - -xce
-          - |
-            cd pull-request
-            git log --graph --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s" > log.txt
-            cat log.txt
-    on_failure:
-      put: pull-request
-      params:
-        path: pull-request
-        status: failure
-  - put: pull-request
-    params:
-      path: pull-request
-      status: success
+  - load_var: pull_requests
+    file: pull-requests/prs.json
+  - across:
+    - var: pr
+      values: ((.:pull_requests))
+    set_pipeline: prs
+    file: repo/ci/template.yml
+    instance_vars: {number: ((.:pr.number))}
