@@ -37,7 +37,7 @@ jobs:
         args:
           - -xce
           - |
-            echo "test"
+            echo "test2"
     on_failure:
       put: pull-request
       params:
