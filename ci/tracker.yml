@@ -33,3 +33,4 @@ jobs:
     set_pipeline: prs
     file: repo/ci/template.yml
     instance_vars: {number: ((.:pr.number))}
+    vars: {github-access-token: ((github-access-token)), pr-webhook-token: ((pr-webhook-token))}
