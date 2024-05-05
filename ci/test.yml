@@ -1,0 +1,15 @@
+- name: repo
+  type: git
+  source:
+    uri: https://github.com/husseinnahle/INF5190-H22
+    branch: test
+
+jobs:
+- name: test
+  plan:
+  - get: repo
+    trigger: true
+  - task: set-pipeline
+    file: repo/INF5190-H22/ci/set_pipelines.yml
+  input_mapping:
+    repo: repo
