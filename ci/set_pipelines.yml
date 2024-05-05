@@ -1,6 +1,6 @@
+steps:
 - input:
     name: repo
-
 - set_pipeline: name
   file: repo/ci/test.yml
   var: {number: 1}
