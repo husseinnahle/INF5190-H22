@@ -2,31 +2,51 @@ resource_types:
 - name: pull-request
   type: registry-image
   source:
-    repository: tasruntime/github-pr-resource
+    repository: teliaoss/github-pr-resource
 
 resources:
-- name: pull-requests
+- name: pull-request
   type: pull-request
+  check_every: 24h
+  webhook_token: token
   source:
     repository: husseinnahle/INF5190-H22
-    branch: ci_pipeline
+    access_token: ((github-access-token))
 
-- name: ci
-  type: git
-  source:
-    uri: https://github.com/concourse/ci
 
 jobs:
-- name: update-pr-pipelines
+- name: test
   plan:
-  - get: ci
-  - get: pull-requests
+  - get: pull-request
     trigger: true
-  - load_var: pull_requests
-    file: pull-requests/prs.json
-  - across:
-    - var: pr
-      values: ((.:pull_requests))
-    set_pipeline: prs
-    file: ci/pipelines/child.yml
-    instance_vars: {number: ((.:pr.number))}
+    version: every
+  - put: pull-request
+    params:
+      path: pull-request
+      status: pending
+  - task: unit-test
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: busybox
+      inputs:
+        - name: pull-request
+      run:
+        path: /bin/sh
+        args:
+          - -xce
+          - |
+            cd pull-request
+            git log --graph --all --color --pretty=format:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s" > log.txt
+            cat log.txt
+    on_failure:
+      put: pull-request
+      params:
+        path: pull-request
+        status: failure
+  - put: pull-request
+    params:
+      path: pull-request
+      status: success
